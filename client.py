@@ -2,23 +2,23 @@ import requests
 
 SERVER_URL = 'http://127.0.0.1:5000'
 
-def add_task(task):
+def addtask(task):
     try:
         response = requests.post(f"{SERVER_URL}/tasks", json={'task': task})
         response.raise_for_status()
-        print("Task added successfully.")
+        print("Task added.")
     except requests.exceptions.RequestException as e:
-        print(f"Error adding task: {e}")
+        print(f"Error: {e}")
 
-def remove_task(task):
+def removetask(task):
     try:
         response = requests.delete(f"{SERVER_URL}/tasks", json={'task': task})
         response.raise_for_status()
-        print("Task removed successfully.")
+        print("Task removed.")
     except requests.exceptions.RequestException as e:
-        print(f"Error removing task: {e}")
+        print(f"Error: {e}")
 
-def display_tasks():
+def displaytasks():
     try:
         response = requests.get(f"{SERVER_URL}/tasks")
         response.raise_for_status()
@@ -27,42 +27,41 @@ def display_tasks():
         for idx, task in enumerate(tasks, 1):
             print(f"{idx}. {task}")
     except requests.exceptions.RequestException as e:
-        print(f"Error retrieving tasks: {e}")
+        print(f"Error: {e}")
 
-def save_tasks():
+def savetasks():
     try:
         response = requests.post(f"{SERVER_URL}/tasks/save")
         response.raise_for_status()
         print("Tasks saved successfully.")
     except requests.exceptions.RequestException as e:
-        print(f"Error saving tasks: {e}")
+        print(f"Error: {e}")
 
-def load_tasks():
+def loadtasks():
     try:
         response = requests.get(f"{SERVER_URL}/tasks/load")
         response.raise_for_status()
         print("Tasks loaded successfully.")
     except requests.exceptions.RequestException as e:
-        print(f"Error loading tasks: {e}")
+        print(f"Error: {e}")
 
-load_tasks()
+loadtasks()
 while True:
     print("\nOptions: add, remove, display, save, exit")
     choice = input("Choose an option: ").strip().lower()
     
     if choice == "add":
         task = input("Enter a task: ").strip()
-        add_task(task)
+        addtask(task)
     elif choice == "remove":
         task = input("Enter a task to remove: ").strip()
-        remove_task(task)
+        removetask(task)
     elif choice == "display":
-        display_tasks()
+        displaytasks()
     elif choice == "save":
-        save_tasks()
+        savetasks()
     elif choice == "exit":
-        save_tasks()
+        savetasks()
         break
     else:
         print("Invalid option.")
-
