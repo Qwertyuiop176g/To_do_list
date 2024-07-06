@@ -6,14 +6,14 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
 tasks = []
-TASKS_FILE_PATH = os.path.abspath("tasks.txt")
+filepath = os.path.abspath("tasks.txt")
 
 @app.route('/tasks', methods=['GET'])
-def get_tasks():
+def gettasks():
     return jsonify(tasks)
 
 @app.route('/tasks', methods=['POST'])
-def add_task():
+def addtask():
     task = request.json.get('task')
     if task:
         tasks.append(task)
@@ -22,7 +22,7 @@ def add_task():
     return jsonify({'status': 'error'}), 400
 
 @app.route('/tasks', methods=['DELETE'])
-def remove_task():
+def removetask():
     task = request.json.get('task')
     if task in tasks:
         tasks.remove(task)
@@ -31,14 +31,13 @@ def remove_task():
     return jsonify({'status': 'error'}), 404
 
 @app.route('/tasks/save', methods=['POST'])
-def save_tasks():
+def savetasks():
     try:
-        # Check if directory exists and is writable
-        dir_name = os.path.dirname(TASKS_FILE_PATH)
+        dir_name = os.path.dirname(filepath)
         if not os.path.exists(dir_name):
             os.makedirs(dir_name)
         
-        with open(TASKS_FILE_PATH, "w") as file:
+        with open(filepath, "w") as file:
             for task in tasks:
                 file.write(task + "\n")
         app.logger.debug("Tasks saved to tasks.txt")
@@ -48,13 +47,13 @@ def save_tasks():
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 @app.route('/tasks/load', methods=['GET'])
-def load_tasks():
+def loadtasks():
     try:
-        if not os.path.exists(TASKS_FILE_PATH):
+        if not os.path.exists(filepath):
             app.logger.error("tasks.txt file not found")
             return jsonify({'status': 'error', 'message': 'tasks.txt file not found'}), 404
         
-        with open(TASKS_FILE_PATH, "r") as file:
+        with open(filepath, "r") as file:
             tasks.clear()
             for line in file:
                 tasks.append(line.strip())
